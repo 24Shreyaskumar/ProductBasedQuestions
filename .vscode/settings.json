@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.sql": "oracle",
+        "*.ddl": "oracle",
+        "*.dml": "oracle",
+        "*.pks": "oracle",
+        "*.pkb": "oracle",
+        "iostream": "cpp"
+    }
+}
