@@ -64,7 +64,7 @@ int main() {
     return 0;
 }*/
 
-#include <cmath>
+/*#include <cmath>
 #include <climits>
 #include <cstdio>
 #include <vector>
@@ -91,10 +91,51 @@ int Solution(string s){
 }
 
 int main() {
-    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+     Enter your code here. Read input from STDIN. Print output to STDOUT 
     string s;
     getline(cin, s);
     
     cout<<Solution(s);
+    return 0;
+}
+*/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+string decimalToBinary(int decimal) {
+    string binaryStr;
+    long long int binary = 0, product = 1, remainder;
+    while (decimal != 0) {
+        remainder = decimal % 2;
+        binary += remainder * product;
+        decimal /= 2;
+        product *= 10;
+    }
+    cout<<binary<<"\n";
+    binaryStr = to_string(binary);
+    return binaryStr;
+}
+    
+int maxConsecutiveOnes(int decimal)
+{
+    string binary = decimalToBinary(decimal);
+    int n = binary.length();
+    int count = 0;
+    int maxConsecutive1s = 0;
+    
+    for (int i = 0; i < n; i++) {
+        if (binary[i] == '0') count = 0;
+        else count++;
+        maxConsecutive1s = max(maxConsecutive1s, count);
+    }
+    
+    return maxConsecutive1s;
+}
+
+int main(){
+    int n; cin>>n;
+    cout<<maxConsecutiveOnes(n);
     return 0;
 }
