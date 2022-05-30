@@ -31,111 +31,105 @@ In this sample test case, the subset between 2 and 5 has one negative number whe
 */
 
 
-#include <cmath>
-#include <climits>
-#include <cstdio>
-#include <vector>
+#include <bits/stdc++.h>
 #include <iostream>
-#include <algorithm>
-#include <map>
+#include <vector>
 
 using namespace std;
 
-typedef vector<int> vect;
+bool isPrime(int n)
+{
+    if (n <= 1)
+        return false;
+ 
+    for (int i = 2; i <= sqrt(n); i++)
+        if (n % i == 0)
+            return false;
+ 
+    return true;
+}
 
 
-int main() {
-//Step 1:
-    //input1 : the size of array, n
-    int n;
-    cin>>n;
+int Solution(vector<int> &arr) {
+    int n = arr.size();
+    int i = -1, j = -1, k = 0;
+    int countOfNegative = 0;
+    int minNegative = INT_MAX;
+    int maxLen = 0;
     
-    //input2 : the array elements
-    vector<int> arr;
-    int i = 0;
-    int j;
-    while(i < n) {
-        cin>>j;
-        arr.push_back(j);
-        i++;
+    for (int x = 0; x < n; x++) {
+        if (isPrime(arr[x])) {
+            i = x;
+            break;
+        }
     }
     
-
+    for (int y = n - 1; y >= 0; y--) {
+        if (isPrime(arr[y])) {
+            j = y;
+            break;
+        }
+    }
     
+    if (i == -1 || j == -1) { 
+        return 0;
+    } 
     
-
-
+    if (i != -1 && j != -1 && i == j) return 1;
     
-//Step 2:
-    //storing the positions of prime numbers :
+    k = i + 1;
     
-    vector<int> primePositions;
-    
-    int flag;
-    for (int itr = 0; itr < n; itr++) {
-        flag = 1;
+    while (k <= j) {
+        if (k == j) {
+            while (i < k) {
+                if (arr[i] < 0) countOfNegative--;
+                
+                if (isPrime(arr[i])) {
+                    if (countOfNegative == minNegative) {
+                        maxLen = max(maxLen, k - i + 1);
+                    }
+                    
+                    if (countOfNegative < minNegative) {
+                        maxLen = k - i + 1;
+                    }
+                }
+                
+                
+                i++;
+            }
+            k++;
+        }
         
-        for (int k = 2; k < arr[itr]; k++){
-            if (arr[itr] % k == 0 && arr[itr] != 1 && arr[itr] >= 0) {
-                flag = 0;
-                break;
+        else if (arr[k] < 0) countOfNegative++;
+        
+        else if (isPrime(arr[k])) {
+            if (countOfNegative == minNegative) {
+                maxLen = max(maxLen, k - i + 1);
+            }
+            
+            else if (countOfNegative < minNegative) {
+                minNegative = countOfNegative;
+                maxLen = k - i + 1;
             }
         }
         
-        if (flag == 1 && arr[itr] != 1 && arr[itr] >= 0) {
-            primePositions.push_back(itr);
-        }
+        k++;
     }
     
-    if (primePositions.empty()) return 0; //means there is no prime number in array
-    
-     
-    
+    return maxLen;
+}
 
-    
-//Step 3:
-    //calculating the freq of negative numbers in between each prime pair
-    
-    map<vect, int> freq;
-    
-    for (int i = 0; i < primePositions.size()-1; i++) {
-        if (primePositions[i+1] - primePositions[i] == 1) {
-            cout<<2<<"\n";
-            return 0;
-        }
-        
-        int count = 0;
-        for(int j =primePositions[i]; j < primePositions[i+1]; j++) {
-             if (arr[j] < 0) {
-                 count++;
-             }
-        }
-        
-        freq[{primePositions[i], primePositions[i+1]}] = count;
+int main() {
+    int n;
+    cout<<"Enter the size of the array : "; cin>>n;
+
+    vector<int> arr;
+    cout<<"\nEnter the array elements : ";
+    for (int i = 0; i < n; i++) {
+        int x; cin>>x;
+        arr.push_back(x);
     }
-    
-    
 
-
-
-
-//Step 4:
-    //finding out the minimum number of negative number count in between primes and finding the corrsponding size using map key-value pair
-    int m = INT_MAX;
-    int size = 0;
-    
-    for (const auto& i : freq) {
-        if (i.second == m) {
-            size = std::max(size, i.first[1] - i.first[0] + 1);
-        }
-        
-        else if (i.second < m) {
-            m = i.second;
-            size = i.first[1] - i.first[0] + 1;
-        }
-    }
-    
-    cout<<size<<"\n";
-    
-    return 0;
+    int maxLen = Solution(arr);
+    cout<<"\nLength of maximum negated subarray : "<<maxLen;
 }
