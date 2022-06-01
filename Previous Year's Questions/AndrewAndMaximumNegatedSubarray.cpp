@@ -90,6 +90,7 @@ int Solution(vector<int> &arr) {
                     }
                     
                     if (countOfNegative < minNegative) {
+                        minNegative = countOfNegative;
                         maxLen = k - i + 1;
                     }
                 }
